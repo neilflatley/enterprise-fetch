@@ -23,6 +23,7 @@
   ],
   "author": "Neil Flatley",
   "license": "ISC",
+  "repository": "https://github.com/neilflatley/enterprise-fetch",
   "dependencies": {
     "abort-controller": "^3.0.0",
     "await-to-js": "^2.1.1",
