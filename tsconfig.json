@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "umd",
     "esModuleInterop": true,
     "target": "esnext",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true,
     "declaration": true,
     "sourceMap": true,
     "outDir": "dist",
