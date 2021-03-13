@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "module": "umd",
+    "module": "ESNext",
     "esModuleInterop": true,
     "target": "esnext",
     "noImplicitAny": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "declaration": true,
     "sourceMap": true,
     "outDir": "dist",
