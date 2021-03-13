@@ -1,9 +1,8 @@
-import { isJson } from './util/parsejson';
 import { FetchInit } from './models/EnterpriseFetch';
 
 const fetchDefaults = {
   // The timeout to apply to requests that do not supply a timeout option
-  timeout: 40 * 1000,
+  timeout: 60 * 1000,
   // Retry policy for all fetch requests
   retry: {
     retries: 3,
@@ -31,20 +30,24 @@ const fetchDefaults = {
           }`
         );
 
-      if ('clone' in res) {
-        const text = await res.clone().text();
-        const body = isJson(text) ? JSON.parse(text) : text;
-        if (body.error) {
-          // if (body.error && body.error.code === 'DUP_RCRD') {
-          //   return false;
-          // }
-        }
-      }
+      // if ('clone' in res) {
+      //   const text = await res.clone().text();
+      //   const body = isJson(text) ? JSON.parse(text) : text;
+      //   if (body.error) {
+      //     // if (body.error && body.error.code === 'DUP_RCRD') {
+      //     //   return false;
+      //     // }
+      //   }
+      // }
 
-      // Retry request on any network error, or 4xx or 5xx status codes
+      // Retry request on any network error,
+      // or 4xx or 5xx status codes. No retry on 404
       if (
+        !res.status ||
         (res.status >= 400 && res.status !== 404) ||
+        ('name' in res && res.name === 'AbortError') ||
         ('type' in res && res.type === 'aborted') ||
+        ('code' in res && res.code === 'ECONNRESET') ||
         ('code' in res && res.code === 'ETIMEDOUT')
       ) {
         return true;
