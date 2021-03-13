@@ -1,14 +1,14 @@
 import babel from '@rollup/plugin-babel';
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 // import pkg from './package.json';
 
 const isProd = process.env.NODE_ENV === 'production';
-
+const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const browserBuild = (dist, babelEnv, name) => ({
   inlineDynamicImports: true,
-  input: 'dist/enterprise-fetch.js',
+  input: 'src/enterprise-fetch.ts',
   output: {
     file: `dist/client/enterprise-fetch.${dist}${isProd ? '.min' : ''}.js`,
     format: 'iife',
@@ -18,12 +18,14 @@ const browserBuild = (dist, babelEnv, name) => ({
   external: ['cross-fetch', 'https-proxy-agent'],
   plugins: [
     resolve({
-      mainFields: ['module', 'main'],
       browser: true,
+      extensions,
+      mainFields: ['module', 'main'],
     }),
     commonjs({}),
     babel({
       exclude: 'node_modules/**',
+      extensions,
       babelHelpers: 'bundled',
       envName: babelEnv,
     }),

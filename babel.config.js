@@ -2,6 +2,7 @@ module.exports = {
   env: {
     legacy: {
       presets: [
+        '@babel/typescript',
         [
           '@babel/preset-env',
           {
@@ -21,6 +22,7 @@ module.exports = {
         ],
         // '@babel/plugin-transform-runtime',
         '@babel/plugin-proposal-class-properties',
+        '@babel/proposal-object-rest-spread',
         '@babel/plugin-syntax-export-default-from',
         '@babel/plugin-proposal-export-default-from',
         '@babel/plugin-transform-classes',
@@ -28,6 +30,7 @@ module.exports = {
     },
     modern: {
       presets: [
+        '@babel/typescript',
         [
           '@babel/preset-env',
           {
@@ -40,7 +43,10 @@ module.exports = {
           },
         ],
       ],
-      plugins: [['@babel/plugin-proposal-class-properties', { loose: true }]],
+      plugins: [
+        ['@babel/plugin-proposal-class-properties', { loose: true }],
+        '@babel/proposal-object-rest-spread',
+      ],
     },
   },
 };
