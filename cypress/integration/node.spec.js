@@ -1,6 +1,12 @@
 import to from 'await-to-js';
 import { expect } from 'chai';
-import enterpriseFetch from '../../dist/enterprise-fetch';
+import enterpriseFetch from '../../dist/enterprise-fetch.esm';
+
+// This is a mocha test spec except
+// it can also be run in cypress
+const setGlobalTimeout = (timeout = 4000) =>
+  typeof Cypress !== 'undefined' &&
+  Cypress.config('defaultCommandTimeout', timeout);
 
 // Testing the tests
 describe('First test', () => {
@@ -36,7 +42,7 @@ describe('Simple fetch', () => {
 describe('Fetch with timeout and default retry', () => {
   let result;
   let didError = false;
-  Cypress.config('defaultCommandTimeout', 20 * 1000);
+  setGlobalTimeout(20 * 1000);
   before(async () => {
     const [error, response] = await to(
       enterpriseFetch('https://httbin.org/json', { timeout: 500 })
