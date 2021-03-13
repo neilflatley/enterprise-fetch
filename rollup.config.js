@@ -2,15 +2,35 @@ import babel from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
-// import pkg from './package.json';
+import pkg from './package.json';
 
-const isProd = process.env.NODE_ENV === 'production';
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
-const browserBuild = (dist, babelEnv, name) => ({
+
+const moduleBuild = ({ dist, babelEnv, name }) => ({
   inlineDynamicImports: true,
   input: 'src/enterprise-fetch.ts',
   output: {
-    file: `dist/client/enterprise-fetch.${dist}${isProd ? '.min' : ''}.js`,
+    file: `dist/enterprise-fetch.${dist}.js`,
+    format: dist,
+  },
+  external: Object.keys(pkg.dependencies),
+  plugins: [
+    resolve({
+      extensions,
+    }),
+    commonjs({}),
+    babel({
+      exclude: 'node_modules/**',
+      extensions,
+      babelHelpers: 'bundled',
+    }),
+  ],
+});
+const browserBuild = ({ dist, babelEnv, name, minify }) => ({
+  inlineDynamicImports: true,
+  input: 'src/enterprise-fetch.ts',
+  output: {
+    file: `dist/client/enterprise-fetch.${dist}${minify ? '.min' : ''}.js`,
     format: 'iife',
     name,
   },
@@ -29,11 +49,35 @@ const browserBuild = (dist, babelEnv, name) => ({
       babelHelpers: 'bundled',
       envName: babelEnv,
     }),
-    isProd && terser(),
+    minify && terser(),
   ],
 });
 
 export default [
-  browserBuild('esm', 'modern', 'efetch'),
-  browserBuild('cjs', 'legacy', 'efetch'),
+  moduleBuild({ dist: 'esm' }),
+  moduleBuild({ dist: 'cjs' }),
+  browserBuild({
+    dist: 'esm',
+    babelEnv: 'modern',
+    name: 'efetch',
+    minify: false,
+  }),
+  browserBuild({
+    dist: 'esm',
+    babelEnv: 'modern',
+    name: 'efetch',
+    minify: true,
+  }),
+  browserBuild({
+    dist: 'cjs',
+    babelEnv: 'legacy',
+    name: 'efetch',
+    minify: false,
+  }),
+  browserBuild({
+    dist: 'cjs',
+    babelEnv: 'legacy',
+    name: 'efetch',
+    minify: true,
+  }),
 ];
