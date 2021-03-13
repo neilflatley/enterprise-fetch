@@ -2,7 +2,9 @@
   "name": "enterprise-fetch",
   "version": "1.0.0-alpha.3",
   "description": "A fetch wrapper to leverage enterprise features such as retry policy and request timeout",
-  "main": "dist/enterprise-fetch.js",
+  "browser": "dist/client/enterprise-fetch.esm.min.js",
+  "module": "dist/enterprise-fetch.js",
+  "main": "dist/client/enterprise-fetch.cjs.js",
   "types": "dist/enterprise-fetch.d.ts",
   "scripts": {
     "build": "npm run clean && tsc && npm run build:browser && npm run build:browser:min",
