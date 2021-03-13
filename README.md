@@ -2,6 +2,8 @@
 
 A fetch wrapper with some nice enterprise features that are missing from the default fetch implementations, such as request timeout, request proxy, and a fully configurable retry policy. Designed to work in both browser and NodeJS server environments.
 
+ES6 module and CJS available for developers and pre-built minified bundles that can be used straight in the browser 
+
 ## Simple usage
 
 The default export provides a fetch wrapper with a default retry policy set
@@ -29,6 +31,8 @@ enterpriseFetch('https://httpbin.org/post', {
 ```
 
 #### Async / await
+
+I prefer writing JavaScript in this way and would be the recommended approach where possible
 
 ```
 const res = await enterpriseFetch('https://httpbin.org/post', {
