@@ -1,6 +1,8 @@
+var element = (id) => document.getElementById(id);
+
 var handleEnter = (event) => {
   if (event.keyCode === 13 && !event.shiftKey) {
-    document.getElementById('goFetch').click();
+    element('goFetch').click();
     event.preventDefault();
   }
 };
@@ -31,7 +33,7 @@ var createLabel = (labelFor, requestId) => {
 };
 
 var appendLog = (message, requestId) => {
-  var log = document.getElementById('log');
+  var log = element('log');
   var newmessage = document.createElement('div');
 
   newmessage.setAttribute('id', 'log-' + requestId);
@@ -44,12 +46,12 @@ var appendLog = (message, requestId) => {
 };
 
 var clearLog = () => {
-  var log = document.getElementById('log');
+  var log = element('log');
   log.textContent = '';
 };
 
 var addResponse = (response, requestId) => {
-  var responseBlock = document.getElementById('response');
+  var responseBlock = element('response');
   var newmessage = document.createElement('div');
   newmessage.setAttribute('id', 'response-' + requestId);
   var text = document.createTextNode(JSON.stringify(response, null, 2));
@@ -62,7 +64,7 @@ var addResponse = (response, requestId) => {
 };
 
 var clearResponse = () => {
-  var responseBlock = document.getElementById('response');
+  var responseBlock = element('response');
   responseBlock.textContent = '';
 };
 

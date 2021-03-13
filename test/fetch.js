@@ -4,16 +4,21 @@ var telemetry = {
 };
 
 var logFetch = () => {
-  document.getElementById('requests').textContent = ++telemetry.fetchRequests;
+  element('requests').textContent = ++telemetry.fetchRequests;
   logRequest();
 };
 
 var logRequest = () => {
-  document.getElementById('total-requests').textContent = ++telemetry.requests;
+  element('total-requests').textContent = ++telemetry.requests;
 };
 
 var fetchDefaults = {
   timeout: 60 * 1000,
+  retry: {
+    retries: 2,
+    minTimeout: 1000,
+    factor: 2,
+  },
   doRetry: async (attempt, res, { url, options }) => {
     // Get the retry policy from options or fetchDefaults
     const { retry = fetchDefaults.retry } = options || fetchDefaults;
@@ -63,8 +68,9 @@ var defaultRequest = {
 };
 
 var goFetch = () => {
-  var url = document.getElementById('url').value;
-  var init = JSON.parse(document.getElementById('init').value || {});
+  var url = element('url').value;
+  var obj = eval('(' + (element('init').value || '{}') + ')');
+  var init = obj;
   logFetch();
   enterpriseFetch(url, { ...fetchDefaults, ...init })
     .then((res) => {
@@ -85,10 +91,10 @@ var goFetch = () => {
 var enterpriseFetch;
 
 var onFetchLoaded = () => {
-  document.getElementById('url').value = defaultRequest.url;
+  element('url').value = defaultRequest.url;
   var init = JSON.stringify(defaultRequest.init, null, 2);
-  document.getElementById('init').value = init;
-  // document.getElementById('init').setAttribute('data-replicated-value', init);
+  element('init').value = init;
+  // element('init').setAttribute('data-replicated-value', init);
 
   // Autosize anything in the DOM on page load
   Array.from(document.querySelectorAll('textarea[autosize]')).forEach(autosize);
@@ -107,5 +113,5 @@ var onFetchLoaded = () => {
 
 var onEnterpriseFetchLoaded = () => {
   enterpriseFetch = efetch.default;
-  document.getElementById('url').focus();
+  element('url').focus();
 };
