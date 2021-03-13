@@ -8,6 +8,8 @@ The default export provides a fetch wrapper with a default retry policy set
 
 Use it as a drop-in replacement for your existing fetch implementation
 
+### Examples
+
 ```
 import enterpriseFetch from 'enterprise-fetch';
 
@@ -25,6 +27,69 @@ enterpriseFetch('https://httpbin.org/post', {
     .then(res => res.json())
     .then(json => console.log(json));
 ```
+
+#### Async / await
+
+```
+const res = await enterpriseFetch('https://httpbin.org/post', {
+        method: 'post',
+        body:    JSON.stringify({ a: 1 }),
+        headers: { 'Content-Type': 'application/json' },
+    });
+const json = await res.json();
+console.log(json);
+```
+
+### Default retry policy
+
+```
+  // The timeout to apply before sending Abort signal
+  // to all requests that do not supply a timeout option
+  timeout: 60 * 1000,
+  // Retry policy for all fetch requests unless overridden
+  retry: {
+    retries: 3,
+    minTimeout: 400,
+    factor: 2,
+  },
+  // Do retry function to examine failures and apply custom 
+  // retry logic return true to retry the fetch call
+  doRetry: async (attempt, res, { url, options }) => {
+    // Get the retry policy from options or fetchDefaults
+    const { retry = fetchDefaults.retry } = options || fetchDefaults;
+    if (attempt <= retry.retries) {
+      const counter = `${attempt}/${retry.retries}`;
+
+      if ('message' in res)
+        console.warn(
+          `[fetch] Attempt ${counter} ${
+            res.name || ('type' in res && res.type)
+          }: ${res.message} ${url || ''}`
+        );
+      else
+        console.warn(
+          `[fetch] Attempt ${counter} ${res.status}: ${res.statusText} ${
+            url || ''
+          }`
+        );
+
+      // Retry request on any network error, 
+      // or 4xx or 5xx status codes. No retry on 404
+      if (
+        !res.status ||
+        (res.status >= 400 && res.status !== 404) ||
+        ('name' in res && res.name === 'AbortError') ||
+        ('type' in res && res.type === 'aborted') ||
+        ('code' in res && res.code === 'ECONNRESET') ||
+        ('code' in res && res.code === 'ETIMEDOUT')
+      ) {
+        return true;
+      }
+    }
+    return false;
+  },
+```
+
 
 ## Advanced usage
 
