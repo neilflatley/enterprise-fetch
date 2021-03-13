@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <!-- <link rel="stylesheet" href="/test/grow-wrap.css" /> -->
+    <link rel="stylesheet" href="/test/stylesheet.css" />
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/autosize@4.0.2/dist/autosize.js"
+      defer
+    ></script>
+    <script type="text/javascript" src="/test/util.js" defer></script>
+    <script
+      type="text/javascript"
+      src="/test/fetch.js"
+      defer
+      onload="onFetchLoaded()"
+    ></script>
+    <script
+      type="text/javascript"
+      src="/dist/client/enterprise-fetch.esm.js"
+      onload="onEnterpriseFetchLoaded()"
+      defer
+    ></script>
+  </head>
+  <body>
+    <div id="web-links">
+      <a href="https://github.com/neilflatley/enterprise-fetch" target="_blank"
+        >GitHub</a
+      >
+      |
+      <a href="https://www.npmjs.com/package/enterprise-fetch" target="_blank"
+        >npm</a
+      >
+    </div>
+    <h1>Enterprise fetch test page</h1>
+    <div id="tools" class="tools">
+      <textarea autosize id="url" onkeypress="handleEnter(event)"></textarea>
+      <textarea autosize id="init" onkeypress="handleEnter(event)"></textarea>
+      <span class="telemetry">
+        <span>Requests: <span id="requests">0</span></span>
+        <span>Total requests: <span id="total-requests">0</span></span>
+      </span>
+      <div class="buttons">
+        <input type="button" id="goFetch" value="Fetch!" onclick="goFetch()" />
+        <input
+          type="button"
+          id="clearOutput"
+          value="Clear output"
+          onclick="clearLog(); clearResponse();"
+      /></div>
+    </div>
+    <h3>Responses</h3>
+    <div id="log" class="log"></div>
+    <h3>Body</h3>
+    <div id="response" class="response"></div>
+  </body>
+</html>

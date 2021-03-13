@@ -1,0 +1,65 @@
+body {
+  background: #eee;
+  font-family: system-ui;
+}
+#web-links {
+  margin: 10px;
+  float: right;
+}
+textarea,
+input {
+  border: 2px outset #eee;
+  padding: 0.5rem;
+}
+label {
+  border-bottom: 1px solid #333;
+  padding-bottom: 0.5rem;
+  flex-shrink: 0;
+  font-size: 85%;
+  width: 120px;
+}
+#url {
+  border: 0;
+  font-family: system-ui;
+  height: 1rem;
+}
+#init,
+#log > div > div,
+#response > div > div {
+  border: 2px outset #eee;
+  padding: 0.5rem;
+  background: #333;
+  color: #eee;
+  flex-grow: 1;
+  font-size: 90%;
+  margin-top: 0;
+}
+.tools {
+  border: 2px outset #eee;
+}
+.tools,
+.log,
+.response {
+  background: #fff;
+  font-family: monospace;
+  line-height: 1.1rem;
+  padding: 0 1rem;
+}
+.log div {
+  padding: 5px 0;
+}
+.telemetry {
+  float: right;
+  line-height: 3.5rem;
+}
+.buttons {
+  padding-bottom: 10px;
+}
+textarea {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+}
