@@ -8,7 +8,10 @@ import proxyAgent from './util/server/proxy-agent';
 import { isFunc } from './util/typeguards';
 
 import { AppError, FetchInit, Fetch } from './models';
+import isClient from './util/client/is-client';
 export * from './models';
+
+const thisFetch = isClient() ? window.fetch : fetch;
 
 export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
   // Fetch function using hoisted defaults wrapped in a promise
@@ -32,7 +35,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
 
       // Try fetching, wait for error or response
       const [error, response]: [AppError, Response] = await to(
-        fetch(url, {
+        thisFetch(url, {
           // Standard fetch options
           ...options,
           // Conditionally add a proxy agent to debug requests
