@@ -29,12 +29,15 @@ const runBrowserTests = (bundle, defaults) => {
   describe(
     'Browser tests [bundle: ' + bundle + '] [defaults: ' + defaults + ']',
     () => {
-      setGlobalTimeout(20 * 1000);
+      setGlobalTimeout(8 * 1000);
       before(() => {
         cy.visit('/test');
         fetchCount = 0;
       });
       it('Fetches successfully with a default request', () => {
+        cy.intercept('https://httpbin.org/status/200', {
+          statusCode: 200,
+        }).as('200Req');
         fetch({ response: '200' });
       });
       it('Sets a request and fetches successfully', () => {
@@ -42,7 +45,29 @@ const runBrowserTests = (bundle, defaults) => {
         setInit({});
         fetch({ response: '200' });
       });
+
       it('Sets a request and an init and fetches successfully', () => {
+        cy.intercept(
+          {
+            url: 'https://www.revitive.com/api/delivery/projects/revitiveUSA',
+            headers: {
+              accesstoken: '5xGSwcT2EF8WZgGmZqeqZ0dHpgXI1nAzFprZlUelD0gPiuoi',
+            },
+          },
+          { id: 'revitiveUSA' }
+        ).as('headerReq');
+        cy.intercept(
+          'https://www.revitive.com/api/delivery/projects/revitiveUSA',
+          (req) =>
+            !req.headers['accesstoken']
+              ? req.reply(401, {
+                  error: {
+                    message: 'Authorization has been denied for this request',
+                  },
+                })
+              : req.reply()
+        ).as('401Req');
+
         setUrl('https://www.revitive.com/api/delivery/projects/revitiveUSA');
         setInit({
           headers: {
@@ -59,6 +84,9 @@ const runBrowserTests = (bundle, defaults) => {
         });
       });
       it('Sets a request to a 500 url', () => {
+        cy.intercept('https://httpbin.org/status/500', {
+          statusCode: 500,
+        }).as('500Req');
         setUrl('https://httpbin.org/status/500');
         setInit({ ...quickRetry, timeout: 10000 });
         fetch({ response: '500', expect: 'false' });
@@ -68,9 +96,13 @@ const runBrowserTests = (bundle, defaults) => {
           cy.get(`#log-${fetchCount}`).should('contain', 'retry: true');
         });
       it('Sets a request to an invalid url and times out with AbortError with retries', () => {
+        cy.intercept('https://httbin.org/json', {
+          delay: 1000,
+          forceNetworkError: true,
+        }).as('errReq');
         setUrl('https://httbin.org/json'); // invalid url
         setInit({ ...quickRetry, timeout: 100 });
-        fetch({ expect: 'aborted' });
+        fetch({ expect: /aborted|failed/ });
       });
     }
   );
