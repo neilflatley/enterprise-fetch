@@ -70,7 +70,7 @@ const runBrowserTests = (bundle, defaults) => {
       it('Sets a request to an invalid url and times out with AbortError with retries', () => {
         setUrl('https://httbin.org/json'); // invalid url
         setInit({ ...quickRetry, timeout: 100 });
-        fetch({ expect: 'The operation was aborted.' });
+        fetch({ expect: 'aborted' });
       });
     }
   );
