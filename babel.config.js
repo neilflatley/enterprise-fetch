@@ -8,6 +8,7 @@ module.exports = {
           {
             modules: false,
             targets: ['IE >= 8', '> 1%'],
+            useBuiltIns: 'entry',
           },
         ],
       ],
@@ -20,7 +21,7 @@ module.exports = {
             async: true,
           },
         ],
-        // '@babel/plugin-transform-runtime',
+        '@babel/plugin-transform-runtime',
         '@babel/plugin-proposal-class-properties',
         '@babel/proposal-object-rest-spread',
         '@babel/plugin-syntax-export-default-from',

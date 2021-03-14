@@ -3,23 +3,23 @@ var telemetry = {
   requests: 0,
 };
 
-var logFetch = () => {
+var logFetch = function () {
   element('requests').textContent = ++telemetry.fetchRequests;
   logRequest();
 };
 
-var logRequest = () => {
+var logRequest = function () {
   element('total-requests').textContent = ++telemetry.requests;
 };
 
 var fetchDefaults = {
   timeout: 60 * 1000,
   retry: {
-    retries: 2,
+    retries: 1,
     minTimeout: 1000,
     factor: 2,
   },
-  doRetry: async (attempt, res, { url, options }) => {
+  doRetry: function (attempt, res, { url, options }) {
     // Get the retry policy from options or fetchDefaults
     const { retry = fetchDefaults.retry } = options || fetchDefaults;
     let retriable = false;
@@ -38,14 +38,7 @@ var fetchDefaults = {
 
       // Retry request on any network error,
       // or 4xx or 5xx status codes. No retry on 404
-      if (
-        !res.status ||
-        (res.status >= 400 && res.status !== 404) ||
-        ('name' in res && res.name === 'AbortError') ||
-        ('type' in res && res.type === 'aborted') ||
-        ('code' in res && res.code === 'ECONNRESET') ||
-        ('code' in res && res.code === 'ETIMEDOUT')
-      ) {
+      if (!res.status || (res.status >= 400 && res.status !== 404)) {
         logRequest();
         retriable = true;
       }
@@ -57,8 +50,7 @@ var fetchDefaults = {
 };
 
 var defaultRequest = {
-  url:
-    'https://www.revitive.com/api/delivery/projects/revitiveUSA/entries/bf140712-339b-4ee4-a8e2-51771e9128f7?fields=sys.uri%2Csys.language',
+  url: 'https://httpbin.org/json',
   init: {
     retry: { retries: 2, minTimeout: 1000, factor: 2 },
     headers: {
@@ -67,42 +59,80 @@ var defaultRequest = {
   },
 };
 
-var goFetch = () => {
+var getFetchInstance = function (defaults) {
+  switch (defaults) {
+    case 'built-in':
+      return enterpriseFetch;
+    case 'app':
+      return enterpriseFetchWithDefaults;
+    case 'none':
+      return enterpriseFetchWithNoDefaults;
+    case 'badly-set':
+      return enterpriseFetchWithBadDefaults;
+  }
+};
+
+var goFetch = function (isLegacy = false) {
+  if (isLegacy) {
+    enterpriseFetch = enterpriseFetchLegacy;
+    enterpriseFetchWithDefaults = enterpriseFetchLegacyWithDefaults;
+    enterpriseFetchWithBadDefaults = enterpriseFetchLegacyWithBadDefaults;
+    enterpriseFetchWithNoDefaults = enterpriseFetchLegacyWithNoDefaults;
+  } else {
+    enterpriseFetch = enterpriseFetchModern;
+    enterpriseFetchWithDefaults = enterpriseFetchModernWithDefaults;
+    enterpriseFetchWithBadDefaults = enterpriseFetchModernWithBadDefaults;
+    enterpriseFetchWithNoDefaults = enterpriseFetchModernWithNoDefaults;
+  }
+
   var url = element('url').value;
-  var obj = eval('(' + (element('init').value || '{}') + ')');
-  var init = obj;
+  var obj = eval('(' + (element('init').value || 'false') + ')');
   logFetch();
-  enterpriseFetch(url, { ...fetchDefaults, ...init })
-    .then((res) => {
+  // To ensure full test coverage we need to use all combinations of fetch
+  const fetchFn = getFetchInstance(element('defaults').value);
+  var init = obj || undefined;
+  fetchFn(url, init)
+    .then(function (res) {
       appendLog(
         'status: ' + res.status + ' ' + res.statusText,
         telemetry.fetchRequests
       );
       return res.text();
     })
-    .then((text) => {
+    .then(function (text) {
       addResponse(tryParse(text), telemetry.fetchRequests);
     })
-    .catch((ex) => {
+    .catch(function (ex) {
       addResponse(ex.toString(), telemetry.fetchRequests);
     });
 };
 
-var enterpriseFetch;
+// To ensure full test coverage we need to use all combinations of fetch
+var enterpriseFetch,
+  enterpriseFetchWithDefaults,
+  enterpriseFetchWithBadDefaults,
+  enterpriseFetchWithNoDefaults;
+var enterpriseFetchModern,
+  enterpriseFetchModernWithDefaults,
+  enterpriseFetchModernWithBadDefaults,
+  enterpriseFetchModernWithNoDefaults;
+var enterpriseFetchLegacy,
+  enterpriseFetchLegacyWithDefaults,
+  enterpriseFetchLegacyWithBadDefaults,
+  enterpriseFetchLegacyWithNoDefaults;
 
-var onFetchLoaded = () => {
+var onFetchLoaded = function () {
   element('url').value = defaultRequest.url;
-  var init = JSON.stringify(defaultRequest.init, null, 2);
-  element('init').value = init;
-  // element('init').setAttribute('data-replicated-value', init);
+  // var init = JSON.stringify(defaultRequest.init, null, 2);
+  // element('init').value = init;
 
   // Autosize anything in the DOM on page load
   Array.from(document.querySelectorAll('textarea[autosize]')).forEach(autosize);
 
   // Setup observer to autosize anything after page load
-  new MutationObserver((mutations) => {
-    Array.from(mutations).forEach((mutation) => {
-      Array.from(mutation.addedNodes).forEach((node) => {
+  new MutationObserver(function (mutations) {
+    Array.from(mutations).forEach(function (mutation) {
+      Array.from(mutation.addedNodes).forEach(function (node) {
         if (node.matches('textarea[autosize]')) {
           autosize(node);
         }
@@ -111,7 +141,22 @@ var onFetchLoaded = () => {
   }).observe(document.body, { childList: true });
 };
 
-var onEnterpriseFetchLoaded = () => {
-  enterpriseFetch = efetch.default;
+var onEnterpriseFetchLoaded = function () {
+  // To ensure full test coverage we need to use all combinations of fetch
+  enterpriseFetchModern = efetch.default;
+  enterpriseFetchModernWithDefaults = efetch.fetchWithDefaults(fetchDefaults);
+  enterpriseFetchModernWithNoDefaults = efetch.fetchWithDefaults();
+  enterpriseFetchModernWithBadDefaults = efetch.fetchWithDefaults({});
+  element('url').focus();
+};
+
+var onEnterpriseFetchLegacyLoaded = function () {
+  // To ensure full test coverage we need to use all combinations of fetch
+  enterpriseFetchLegacy = efetchLegacy.default;
+  enterpriseFetchLegacyWithDefaults = efetchLegacy.fetchWithDefaults(
+    fetchDefaults
+  );
+  enterpriseFetchLegacyWithNoDefaults = efetchLegacy.fetchWithDefaults();
+  enterpriseFetchLegacyWithBadDefaults = efetchLegacy.fetchWithDefaults({});
   element('url').focus();
 };

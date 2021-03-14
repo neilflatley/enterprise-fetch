@@ -1,6 +1,10 @@
-body {
+body,
+select {
   background: #eee;
   font-family: system-ui;
+}
+h1 {
+  margin-bottom: 10px;
 }
 #web-links {
   margin: 10px;
@@ -34,6 +38,10 @@ label {
   font-size: 90%;
   margin-top: 0;
 }
+.url-input,
+.init-input {
+  padding: 0.5rem 0.5rem 0 0;
+}
 .tools {
   border: 2px outset #eee;
 }
@@ -48,12 +56,21 @@ label {
 .log div {
   padding: 5px 0;
 }
-.telemetry {
+.fetch-options {
   float: right;
-  line-height: 3.5rem;
+  padding: 5px 10px;
+  text-align: right;
 }
 .buttons {
+  float: left;
+  line-height: 3rem;
   padding-bottom: 10px;
+}
+.telemetry {
+  background: #ccc;
+  margin: 0 -15px 0 -15px;
+  padding: 15px;
+  text-align: right;
 }
 textarea {
   margin: 10px 0;

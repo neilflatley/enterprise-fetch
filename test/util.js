@@ -1,15 +1,19 @@
-var element = (id) => document.getElementById(id);
+var element = function (id) {
+  return document.getElementById(id);
+};
 
-var handleEnter = (event) => {
+var handleEnter = function (event) {
   if (event.keyCode === 13 && !event.shiftKey) {
     element('goFetch').click();
     event.preventDefault();
   }
 };
 
-var logTimestamp = () => '[' + new Date().toTimeString().substring(0, 8) + '] ';
+var logTimestamp = function () {
+  return '[' + new Date().toTimeString().substring(0, 8) + '] ';
+};
 
-var tryParse = (str) => {
+var tryParse = function (str) {
   try {
     return typeof str === 'object' ? str : JSON.parse(str);
   } catch (e) {
@@ -17,12 +21,12 @@ var tryParse = (str) => {
   }
 };
 
-var createContainer = () => {
+var createContainer = function () {
   var div = document.createElement('div');
   div.setAttribute('class', 'flex-container');
   return div;
 };
-var createLabel = (labelFor, requestId) => {
+var createLabel = function (labelFor, requestId) {
   var label = document.createElement('label');
   var labelText = document.createTextNode(
     logTimestamp() + '[id:' + requestId + ']'
@@ -32,7 +36,7 @@ var createLabel = (labelFor, requestId) => {
   return label;
 };
 
-var appendLog = (message, requestId) => {
+var appendLog = function (message, requestId) {
   var log = element('log');
   var newmessage = document.createElement('div');
 
@@ -45,12 +49,12 @@ var appendLog = (message, requestId) => {
   log.appendChild(container);
 };
 
-var clearLog = () => {
+var clearLog = function () {
   var log = element('log');
   log.textContent = '';
 };
 
-var addResponse = (response, requestId) => {
+var addResponse = function (response, requestId) {
   var responseBlock = element('response');
   var newmessage = document.createElement('div');
   newmessage.setAttribute('id', 'response-' + requestId);
@@ -63,11 +67,11 @@ var addResponse = (response, requestId) => {
   responseBlock.appendChild(document.createElement('br'));
 };
 
-var clearResponse = () => {
+var clearResponse = function () {
   var responseBlock = element('response');
   responseBlock.textContent = '';
 };
 
-var autogrowTextarea = (that) => {
+var autogrowTextarea = function (that) {
   that.parentNode.dataset.replicatedValue = that.value;
 };

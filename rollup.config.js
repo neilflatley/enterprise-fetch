@@ -5,10 +5,11 @@ import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
+const input = 'src/enterprise-fetch.ts';
 
-const moduleBuild = ({ dist, babelEnv, name }) => ({
+const moduleBuild = ({ dist }) => ({
   inlineDynamicImports: true,
-  input: 'src/enterprise-fetch.ts',
+  input,
   output: {
     file: `dist/enterprise-fetch.${dist}.js`,
     format: dist,
@@ -26,27 +27,27 @@ const moduleBuild = ({ dist, babelEnv, name }) => ({
     }),
   ],
 });
+
 const browserBuild = ({ dist, babelEnv, name, minify }) => ({
   inlineDynamicImports: true,
-  input: 'src/enterprise-fetch.ts',
+  input,
   output: {
     file: `dist/client/enterprise-fetch.${dist}${minify ? '.min' : ''}.js`,
     format: 'iife',
     name,
   },
-  //   external: Object.keys(pkg.dependencies),
   external: ['cross-fetch', 'https-proxy-agent'],
   plugins: [
     resolve({
       browser: true,
       extensions,
-      mainFields: ['module', 'main'],
+      mainFields: ['browser', 'module', 'main'],
     }),
     commonjs({}),
     babel({
       exclude: 'node_modules/**',
       extensions,
-      babelHelpers: 'bundled',
+      babelHelpers: babelEnv === 'legacy' ? 'runtime' : 'bundled',
       envName: babelEnv,
     }),
     minify && terser(),
@@ -71,13 +72,13 @@ export default [
   browserBuild({
     dist: 'cjs',
     babelEnv: 'legacy',
-    name: 'efetch',
+    name: 'efetchLegacy',
     minify: false,
   }),
   browserBuild({
     dist: 'cjs',
     babelEnv: 'legacy',
-    name: 'efetch',
+    name: 'efetchLegacy',
     minify: true,
   }),
 ];

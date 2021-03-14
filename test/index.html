@@ -16,8 +16,14 @@
     ></script>
     <script
       type="text/javascript"
-      src="/dist/client/enterprise-fetch.esm.js"
+      src="/dist/instrumented/client/enterprise-fetch.esm.js"
       onload="onEnterpriseFetchLoaded()"
+      defer
+    ></script>
+    <script
+      type="text/javascript"
+      src="/dist/instrumented/client/enterprise-fetch.cjs.js"
+      onload="onEnterpriseFetchLegacyLoaded()"
       defer
     ></script>
   </head>
@@ -33,20 +39,42 @@
     </div>
     <h1>Enterprise fetch test page</h1>
     <div id="tools" class="tools">
-      <textarea autosize id="url" onkeypress="handleEnter(event)"></textarea>
-      <textarea autosize id="init" onkeypress="handleEnter(event)"></textarea>
-      <span class="telemetry">
-        <span>Requests: <span id="requests">0</span></span>
-        <span>Total requests: <span id="total-requests">0</span></span>
-      </span>
+      <div class="url-input">
+        <label for="url">Fetch uri: </label>
+        <textarea autosize id="url" onkeypress="handleEnter(event)"></textarea>
+      </div>
+      <div class="fetch-options">
+        <label for="defaults">Fetch defaults: </label>
+        <select id="defaults">
+          <option value="app">App defaults</option>
+          <option value="built-in">Built-in</option>
+          <option value="none">No defaults</option>
+          <option value="badly-set">Badly set defaults</option>
+        </select>
+      </div>
+      <div class="init-input">
+        <label for="init">Fetch init: </label>
+        <textarea autosize id="init" onkeypress="handleEnter(event)"></textarea>
+      </div>
       <div class="buttons">
         <input type="button" id="goFetch" value="Fetch!" onclick="goFetch()" />
+        <input
+          type="button"
+          id="goFetchLegacy"
+          value="Fetch! cjs"
+          onclick="goFetch(true)"
+        />
         <input
           type="button"
           id="clearOutput"
           value="Clear output"
           onclick="clearLog(); clearResponse();"
-      /></div>
+        />
+      </div>
+      <div class="telemetry">
+        <span>Requests: <span id="requests">0</span></span>
+        <span>Total requests: <span id="total-requests">0</span></span>
+      </div>
     </div>
     <h3>Responses</h3>
     <div id="log" class="log"></div>
