@@ -29,7 +29,7 @@ const runBrowserTests = (bundle, defaults) => {
   describe(
     'Browser tests [bundle: ' + bundle + '] [defaults: ' + defaults + ']',
     () => {
-      setGlobalTimeout(8 * 1000);
+      setGlobalTimeout(10 * 1000);
       before(() => {
         cy.visit('/test');
         fetchCount = 0;
