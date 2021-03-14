@@ -1,4 +1,4 @@
-# Enterprise Fetch
+# Enterprise Fetch [![Node.js CI](https://github.com/neilflatley/enterprise-fetch/actions/workflows/node.js.yml/badge.svg)](https://github.com/neilflatley/enterprise-fetch/actions/workflows/node.js.yml) ![npm](https://img.shields.io/npm/v/enterprise-fetch)
 
 A fetch wrapper with some nice enterprise features that are missing from the default fetch implementations, such as request timeout, request proxy, and a fully configurable retry policy. Designed to work in both browser and NodeJS server environments.
 
