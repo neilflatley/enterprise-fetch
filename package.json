@@ -16,6 +16,7 @@
     "cypress:run": "cypress run",
     "instrument": "nyc instrument --compact=false dist dist/instrumented",
     "mocha:run": "mocha --es-module-specifier-resolution=node --require @babel/register --timeout 500000 --exit cypress/integration/node.spec.js",
+    "nyc:test": "nyc npm test",
     "prestart": "npm run build",
     "report:coverage": "nyc report --reporter=html",
     "report:coverage:text": "nyc report --reporter=text",
