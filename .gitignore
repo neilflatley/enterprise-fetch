@@ -3,4 +3,5 @@
 /coverage
 /cypress/screenshots
 /cypress/videos
+/dist
 /node_modules

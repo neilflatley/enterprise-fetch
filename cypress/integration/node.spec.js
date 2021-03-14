@@ -2,7 +2,7 @@ import to from 'await-to-js';
 import { expect } from 'chai';
 import enterpriseFetch, {
   fetchWithDefaults,
-} from '../../dist/instrumented/enterprise-fetch.esm';
+} from '../../instrumented/dist/enterprise-fetch.esm';
 
 // This is a mocha test spec except
 // it can also be run in cypress
