@@ -24,8 +24,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+        env:
+          CODECOV_TOKEN: 9f816f9c-8faa-4812-9bb2-5235c8c11468
       - run: npm install -g codecov
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
       - run: npm run report-coverage
+        
