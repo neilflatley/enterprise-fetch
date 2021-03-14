@@ -6,6 +6,7 @@ module.exports = {
         [
           '@babel/preset-env',
           {
+            corejs: '2',
             modules: false,
             targets: ['IE >= 8', '> 1%'],
             useBuiltIns: 'entry',

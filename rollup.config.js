@@ -7,6 +7,16 @@ import pkg from './package.json';
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const input = 'src/enterprise-fetch.ts';
 
+const dynamicImportPlugin = () => ({
+  name: 'dynamic-import-polyfill',
+  renderDynamicImport() {
+    return {
+      left: '(',
+      right: ')',
+    };
+  },
+});
+
 const moduleBuild = ({ dist }) => ({
   inlineDynamicImports: true,
   input,
@@ -43,13 +53,22 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
       extensions,
       mainFields: ['browser', 'module', 'main'],
     }),
-    commonjs({}),
+    commonjs(),
     babel({
-      exclude: 'node_modules/**',
-      extensions,
       babelHelpers: babelEnv === 'legacy' ? 'runtime' : 'bundled',
       envName: babelEnv,
+      // exclude: 'node_modules/**',
+      extensions,
+      include:
+        babelEnv === 'legacy'
+          ? [
+              'src/**',
+              'node_modules/abort-controller/**',
+              'node_modules/err-code/**',
+            ]
+          : 'src/**',
     }),
+    dynamicImportPlugin(),
     minify && terser(),
   ],
 });

@@ -8,6 +8,7 @@
   "types": "dist/enterprise-fetch.d.ts",
   "scripts": {
     "build": "npm run clean && tsc && rollup -c && npm run instrument",
+    "build:serve": "npm run build && npm run serve",
     "clean": "rimraf dist",
     "cy:open": "start-server-and-test serve http://localhost:5000 cypress:open",
     "cy:run": "cypress run",

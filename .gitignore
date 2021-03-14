@@ -1,6 +1,4 @@
-/.nyc_output
 /build
-/coverage
 /cypress/screenshots
 /cypress/videos
 /dist

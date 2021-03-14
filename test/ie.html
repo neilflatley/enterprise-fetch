@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://polyfill.io/v3/polyfill.min.js?features=AbortController%2Cfetch"
+    ></script>
+    <!-- <script
+      type="text/javascript"
+      src="https://unpkg.com/enterprise-fetch/dist/client/enterprise-fetch.cjs.min.js"
+    ></script> -->
+    <script
+      type="text/javascript"
+      src="../dist/client/enterprise-fetch.cjs.min.js"
+    ></script>
+    <script>
+      var element = function (id) {
+        return document.getElementById(id);
+      };
+      var goFetch = function () {
+        var uri = element('uri').value;
+        efetchLegacy.default(uri).then(function (response) {
+          alert(response.status);
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <input type="text" id="uri" value="https://httpbin.org/status/500" />
+    <input type="button" id="fetch" value="Fetch" onclick="goFetch()" />
+  </body>
+</html>
