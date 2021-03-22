@@ -18,7 +18,7 @@
       };
       var goFetch = function () {
         var uri = element('uri').value;
-        efetchLegacy.default(uri).then(function (response) {
+        window['enterprise-fetch-legacy'].default(uri).then(function (response) {
           alert(response.status);
         });
       };

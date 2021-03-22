@@ -13,7 +13,7 @@ export * from './models';
 
 const thisFetch = isClient() ? window.fetch : fetch;
 
-export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
+const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
   // Fetch function using hoisted defaults wrapped in a promise
   // retry function adhering to a default or supplied policy calling
   // a doRetry function on each failure that requires a boolean return
@@ -72,4 +72,5 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
   return enterpriseFetch;
 };
 
+export { fetchWithDefaults };
 export default fetchWithDefaults(FetchDefaults);

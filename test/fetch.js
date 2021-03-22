@@ -143,6 +143,7 @@ var onFetchLoaded = function () {
 
 var onEnterpriseFetchLoaded = function () {
   // To ensure full test coverage we need to use all combinations of fetch
+  var efetch = window['enterprise-fetch'];
   enterpriseFetchModern = efetch.default;
   enterpriseFetchModernWithDefaults = efetch.fetchWithDefaults(fetchDefaults);
   enterpriseFetchModernWithNoDefaults = efetch.fetchWithDefaults();
@@ -152,6 +153,7 @@ var onEnterpriseFetchLoaded = function () {
 
 var onEnterpriseFetchLegacyLoaded = function () {
   // To ensure full test coverage we need to use all combinations of fetch
+  var efetchLegacy = window['enterprise-fetch-legacy'];
   enterpriseFetchLegacy = efetchLegacy.default;
   enterpriseFetchLegacyWithDefaults = efetchLegacy.fetchWithDefaults(
     fetchDefaults

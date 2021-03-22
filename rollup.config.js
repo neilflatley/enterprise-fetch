@@ -43,8 +43,11 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
   input,
   output: {
     file: `dist/client/enterprise-fetch.${dist}${minify ? '.min' : ''}.js`,
-    format: 'iife',
+    format: 'umd',
     name,
+    globals: {
+      'enterprise-fetch': name,
+    },
   },
   external: ['cross-fetch', 'https-proxy-agent'],
   plugins: [
@@ -79,25 +82,25 @@ export default [
   browserBuild({
     dist: 'esm',
     babelEnv: 'modern',
-    name: 'efetch',
+    name: 'enterprise-fetch',
     minify: false,
   }),
   browserBuild({
     dist: 'esm',
     babelEnv: 'modern',
-    name: 'efetch',
+    name: 'enterprise-fetch',
     minify: true,
   }),
   browserBuild({
     dist: 'cjs',
     babelEnv: 'legacy',
-    name: 'efetchLegacy',
+    name: 'enterprise-fetch-legacy',
     minify: false,
   }),
   browserBuild({
     dist: 'cjs',
     babelEnv: 'legacy',
-    name: 'efetchLegacy',
+    name: 'enterprise-fetch-legacy',
     minify: true,
   }),
 ];

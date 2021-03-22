@@ -17,18 +17,17 @@ const fetchDefaults = {
     if (attempt <= retry.retries) {
       const counter = `${attempt}/${retry.retries}`;
 
-      if ('message' in res)
-        console.warn(
-          `[fetch] Attempt ${counter} ${res.name}: ${res.message} ${url}`
-        );
-      else
-        console.warn(
-          `[fetch] Attempt ${counter} ${res.status}: ${res.statusText} ${url}`
-        );
-
       // Retry request on any network error,
       // or 4xx or 5xx status codes. No retry on 404
       if (!res.status || (res.status >= 400 && res.status !== 404)) {
+        if ('message' in res)
+          console.warn(
+            `[fetch] Attempt ${counter} ${res.name}: ${res.message} ${url}`
+          );
+        else
+          console.warn(
+            `[fetch] Attempt ${counter} ${res.status}: ${res.statusText} ${url}`
+          );
         return true;
       }
     }
