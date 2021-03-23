@@ -22,7 +22,7 @@
     "report:coverage:text": "nyc report --reporter=text",
     "report:coverage:summary": "nyc report --reporter=text-summary",
     "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
-    "start": "npm test",
+    "start": "npm run nyc:test",
     "serve": "serve .",
     "test": "start-server-and-test serve http://localhost:5000 cypress:run"
   },
