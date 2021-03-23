@@ -2,9 +2,9 @@
   "compilerOptions": {
     "module": "ESNext",
     "esModuleInterop": true,
-    "target": "esnext",
+    "target": "ESNext",
     "noImplicitAny": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "declaration": true,
     // Ensure that .d.ts files are created by tsc, but not .js files
@@ -17,7 +17,7 @@
     "paths": {
       // "*": ["node_modules/*"]
     },
-    "lib": ["esnext"]
+    "lib": ["ESNext", "DOM"]
   },
   "include": ["src/**/*"]
 }
