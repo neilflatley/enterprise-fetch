@@ -5,3 +5,5 @@
 /cypress/videos
 /dist
 /node_modules
+/instrumented
+codecov.*
