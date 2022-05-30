@@ -287,3 +287,12 @@ You could use a polyfill service to polyfill missing features by adding a snippe
   src="https://polyfill.io/v3/polyfill.min.js?features=AbortController%2Cfetch"
 ></script>
 ```
+
+## Development scripts
+
+- `npm start` builds the library and runs through all tests in command line
+- `npm run build` build the library from source and create an instrumented copy of the build for coverage reporting
+- `npm test` starts a http server and runs through all tests in command line
+- `npm run cy:open` starts a http server and opens cypress testing gui for you to execute test specs interactively in a browser window
+- `npm run report:coverage` checks code coverage and starts a http server rendering the test coverage report for review in a browser
+- `npm run serve` starts a http server with a simple browser testing page available at the `/test` route
