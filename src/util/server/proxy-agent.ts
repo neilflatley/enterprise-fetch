@@ -5,7 +5,7 @@ const proxyAgent: ProxyAgent = async () => {
   const proxyUri =
     (typeof process !== 'undefined' && process.env.http_proxy) || false;
   if (proxyUri) {
-    console.info(`Proxying via http_proxy: ${process.env.http_proxy}`);
+    // console.info(`Proxying via http_proxy: ${process.env.http_proxy}`);
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     const { HttpsProxyAgent } = await import('https-proxy-agent');
     return { agent: new HttpsProxyAgent(proxyUri) };
