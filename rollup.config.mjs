@@ -1,8 +1,9 @@
 import babel from '@rollup/plugin-babel';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
+import resolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
+import typescript from '@rollup/plugin-typescript';
+import pkg from './package.json' with { type: 'json' };
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 const input = 'src/enterprise-fetch.ts';
@@ -18,28 +19,24 @@ const dynamicImportPlugin = () => ({
 });
 
 const moduleBuild = ({ dist }) => ({
-  inlineDynamicImports: true,
   input,
   output: {
     file: `dist/enterprise-fetch.${dist}.js`,
     format: dist,
+    inlineDynamicImports: true,
+    exports: 'named',
   },
   external: Object.keys(pkg.dependencies),
   plugins: [
     resolve({
       extensions,
     }),
-    commonjs({}),
-    babel({
-      exclude: 'node_modules/**',
-      extensions,
-      babelHelpers: 'bundled',
-    }),
+    commonjs(),
+    typescript({ declaration: false, sourceMap: false }),
   ],
 });
 
 const browserBuild = ({ dist, babelEnv, name, minify }) => ({
-  inlineDynamicImports: true,
   input,
   output: {
     file: `dist/client/enterprise-fetch.${dist}${minify ? '.min' : ''}.js`,
@@ -48,8 +45,10 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
     globals: {
       'enterprise-fetch': name,
     },
+    inlineDynamicImports: true,
+    exports: 'named',
   },
-  external: ['cross-fetch', 'https-proxy-agent'],
+  external: ['node-fetch', 'https-proxy-agent'],
   plugins: [
     resolve({
       browser: true,
@@ -57,6 +56,7 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
       mainFields: ['browser', 'module', 'main'],
     }),
     commonjs(),
+    typescript({ declaration: false, sourceMap: false }),
     babel({
       babelHelpers: babelEnv === 'legacy' ? 'runtime' : 'bundled',
       envName: babelEnv,
@@ -65,10 +65,10 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
       include:
         babelEnv === 'legacy'
           ? [
-              'src/**',
-              'node_modules/abort-controller/**',
-              'node_modules/err-code/**',
-            ]
+            'src/**',
+            'node_modules/abort-controller/**',
+            'node_modules/err-code/**',
+          ]
           : 'src/**',
     }),
     dynamicImportPlugin(),
