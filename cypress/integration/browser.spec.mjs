@@ -30,9 +30,9 @@ const runBrowserTests = (bundle, defaults) => {
     'Browser tests [bundle: ' + bundle + '] [defaults: ' + defaults + ']',
     () => {
       setGlobalTimeout(10 * 1000);
-      before(() => {
-        cy.visit('/test');
+      beforeEach(() => {
         fetchCount = 0;
+        cy.visit('/test');
       });
       it('Fetches successfully with a default request', () => {
         cy.intercept('https://httpbin.org/status/200', {
@@ -41,12 +41,15 @@ const runBrowserTests = (bundle, defaults) => {
         fetch({ response: '200' });
       });
       it('Sets a request and fetches successfully', () => {
+        cy.intercept('https://httpbin.org/status/200', {
+          statusCode: 200,
+        }).as('200Req');
         setUrl('https://httpbin.org/status/200');
         setInit({});
         fetch({ response: '200' });
       });
 
-      it('Sets a request and an init and fetches successfully', () => {
+      it('Sets a request with auth header in init and fetches successfully', () => {
         cy.intercept(
           {
             url: 'https://www.revitive.com/api/delivery/projects/revitiveUSA',
@@ -56,17 +59,6 @@ const runBrowserTests = (bundle, defaults) => {
           },
           { id: 'revitiveUSA' }
         ).as('headerReq');
-        cy.intercept(
-          'https://www.revitive.com/api/delivery/projects/revitiveUSA',
-          (req) =>
-            !req.headers['accesstoken']
-              ? req.reply(401, {
-                  error: {
-                    message: 'Authorization has been denied for this request',
-                  },
-                })
-              : req.reply()
-        ).as('401Req');
 
         setUrl('https://www.revitive.com/api/delivery/projects/revitiveUSA');
         setInit({
@@ -75,26 +67,36 @@ const runBrowserTests = (bundle, defaults) => {
           },
         });
         fetch({ expect: '"id": "revitiveUSA"' });
+
       });
-      it('Then clears the init and fails with a 401', () => {
+      it('Then clears the auth header init and fails with a 401', () => {
+        cy.intercept(
+          'https://www.revitive.com/api/delivery/projects/revitiveUSA',
+          (req) =>
+            !req.headers['accesstoken']
+              ? req.reply(401, {
+                error: {
+                  message: 'Authorization has been denied for this request',
+                },
+              })
+              : req.reply()
+        ).as('401Req');
+        setUrl('https://www.revitive.com/api/delivery/projects/revitiveUSA');
         clearInit();
         fetch({
           response: 'Unauthorized',
           expect: 'Authorization has been denied',
         });
       });
-      it('Sets a request to a 500 url', () => {
+      it(`Sets a request to a 500 url${defaults === 'App defaults' ? ' and logs \`retry: true\`' : ''}`, () => {
         cy.intercept('https://httpbin.org/status/500', {
           statusCode: 500,
         }).as('500Req');
         setUrl('https://httpbin.org/status/500');
         setInit({ ...quickRetry, timeout: 10000 });
         fetch({ response: '500', expect: 'false' });
+        defaults === 'App defaults' && cy.get(`#log-${fetchCount}`).should('contain', 'retry: true');
       });
-      defaults === 'app' &&
-        it('Checks the log for retry: true', () => {
-          cy.get(`#log-${fetchCount}`).should('contain', 'retry: true');
-        });
       it('Sets a request to an invalid url and times out with AbortError with retries', () => {
         cy.intercept('https://httbin.org/json', {
           delay: 1000,
@@ -108,8 +110,8 @@ const runBrowserTests = (bundle, defaults) => {
   );
 };
 
-runBrowserTests('modern', 'app');
-runBrowserTests('legacy', 'app');
-runBrowserTests('modern', 'built-in');
-runBrowserTests('modern', 'none');
-runBrowserTests('modern', 'badly-set');
+runBrowserTests('modern', 'App defaults');
+runBrowserTests('legacy', 'App defaults');
+runBrowserTests('modern', 'Built-in');
+runBrowserTests('modern', 'No defaults');
+runBrowserTests('modern', 'Badly set defaults');

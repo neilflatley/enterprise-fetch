@@ -1,0 +1,6 @@
+{
+  "extension": [".js", ".ts", ".mjs"],
+  "include": ["**/enterprise-fetch.esm.js"],
+  "exclude": ["**/cypress/**", "**/*.spec.*", "cypress.config.ts"],
+  "reporter": ["lcov", "text"]
+}
