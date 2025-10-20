@@ -1,4 +1,5 @@
 import babel from '@rollup/plugin-babel';
+import { codecovRollupPlugin } from '@codecov/rollup-plugin';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
@@ -18,13 +19,14 @@ const dynamicImportPlugin = () => ({
   },
 });
 
-const moduleBuild = ({ dist }) => ({
+const moduleBuild = ({ dist, codecov }) => ({
   input,
   output: {
     file: `dist/enterprise-fetch.${dist}.js`,
     format: dist,
     inlineDynamicImports: true,
     exports: 'named',
+    sourcemap: !!codecov,
   },
   external: Object.keys(pkg.dependencies),
   plugins: [
@@ -32,7 +34,17 @@ const moduleBuild = ({ dist }) => ({
       extensions,
     }),
     commonjs(),
-    typescript({ declaration: false, sourceMap: false }),
+    typescript({
+      declaration: false,
+      sourceMap: !!codecov,
+    }),
+    // Put the Codecov Rollup plugin after all other plugins
+    codecov && codecovRollupPlugin({
+      enableBundleAnalysis: true,
+      bundleName: `enterprise-fetch.${dist}.js`,
+      uploadToken: "9f816f9c-8faa-4812-9bb2-5235c8c11468",
+      telemetry: false
+    }),
   ],
 });
 
@@ -77,7 +89,7 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
 });
 
 export default [
-  moduleBuild({ dist: 'esm' }),
+  moduleBuild({ dist: 'esm', codecov: true }),
   moduleBuild({ dist: 'cjs' }),
   browserBuild({
     dist: 'esm',
