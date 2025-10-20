@@ -30,7 +30,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
       // Since v15.4.0 Node.js comes with AbortController out of the box
       const controller =
         new AbortController() as unknown as globalThis.AbortController;
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         controller.abort();
       }, timeoutMs);
 
@@ -46,6 +46,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
         })
       );
       if (error) {
+        clearTimeout(timeoutId);
         if (
           isFunc(doRetry) &&
           (await doRetry(attempt, error, {
@@ -59,6 +60,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
       }
 
       if (!response.ok) {
+        clearTimeout(timeoutId);
         if (
           isFunc(doRetry) &&
           (await doRetry(attempt, response, {
@@ -71,6 +73,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
         return response;
       }
 
+      clearTimeout(timeoutId);
       return response;
     }, init.retry || fetchDefaults.retry);
 
