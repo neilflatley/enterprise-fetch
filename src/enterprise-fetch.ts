@@ -29,7 +29,7 @@ const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
 
       // Abort signal pattern
       const controller = new AbortController();
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         controller.abort();
       }, timeoutMs);
 
@@ -45,6 +45,7 @@ const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
         })
       );
       if (error) {
+        clearTimeout(timeoutId);
         if (
           isFunc(doRetry) &&
           (await doRetry(attempt, error, { url, options: init }))
@@ -55,6 +56,7 @@ const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
       }
 
       if (!response.ok) {
+        clearTimeout(timeoutId);
         if (
           isFunc(doRetry) &&
           (await doRetry(attempt, response, { url, options: init }))
@@ -64,6 +66,7 @@ const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
         return response;
       }
 
+      clearTimeout(timeoutId);
       return response;
     }, init.retry || fetchDefaults.retry);
 
