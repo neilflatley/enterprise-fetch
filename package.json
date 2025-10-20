@@ -1,6 +1,6 @@
 {
   "name": "enterprise-fetch",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A fetch wrapper to leverage enterprise features such as retry policy and request timeout",
   "browser": "dist/client/enterprise-fetch.esm.min.js",
   "module": "dist/enterprise-fetch.esm.js",
