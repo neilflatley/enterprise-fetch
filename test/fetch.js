@@ -50,7 +50,7 @@ var fetchDefaults = {
 };
 
 var defaultRequest = {
-  url: 'https://httpbin.org/json',
+  url: 'https://httpbun.com/get',
   init: {
     retry: { retries: 2, minTimeout: 1000, factor: 2 },
     headers: {

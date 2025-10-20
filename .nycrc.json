@@ -1,0 +1,8 @@
+{
+  "extension": [".js", ".ts", ".mjs"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/cypress/**", "**/*.spec.*", "cypress.config.ts"],
+  "reporter": ["lcov", "text"],
+  "sourceMap": true,
+  "instrument": true
+}
