@@ -18,6 +18,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
     const thisFetch = await resolveFetch();
     const fetchResponse = await promiseRetry(async (retry, attempt) => {
       const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         retry: retryPolicy = fetchDefaults.retry,
         timeout: rtimeout = fetchDefaults.timeout,
         doRetry = fetchDefaults.doRetry || FetchDefaults.doRetry,
