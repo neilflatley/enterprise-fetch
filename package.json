@@ -48,7 +48,8 @@
     "await-to-js": "^3.0.0",
     "https-proxy-agent": "^7.0.6",
     "node-fetch": "^2.7.0",
-    "promise-retry": "^2.0.1"
+    "promise-retry": "^2.0.1",
+    "undici": "^7.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
@@ -59,6 +60,8 @@
     "@babel/runtime": "^7.28.4",
     "@codecov/rollup-plugin": "^1.9.1",
     "@cypress/code-coverage": "^3.14.7",
+    "@cypress/webpack-batteries-included-preprocessor": "^4.0.2",
+    "@cypress/webpack-preprocessor": "^6.0.4",
     "@eslint/js": "^9.38.0",
     "@rollup/plugin-babel": "^6.1.0",
     "@rollup/plugin-commonjs": "^28.0.8",

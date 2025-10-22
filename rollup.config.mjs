@@ -60,7 +60,7 @@ const browserBuild = ({ dist, babelEnv, name, minify }) => ({
     inlineDynamicImports: true,
     exports: 'named',
   },
-  external: ['node-fetch', 'https-proxy-agent'],
+  external: ['undici', 'node-fetch', 'https-proxy-agent'],
   plugins: [
     resolve({
       browser: true,
