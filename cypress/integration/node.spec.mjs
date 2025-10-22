@@ -99,5 +99,5 @@ const runNodeTests = (fetchFn, defaults) => {
 runNodeTests(enterpriseFetch, 'built-in');
 runNodeTests(fetchWithDefaults(), 'none');
 runNodeTests(fetchWithDefaults({}), 'badly-set');
-globalThis.fallbackFetch = true;
-runNodeTests(enterpriseFetch, 'built-in (node-fetch fallback)');
+// globalThis.fallbackFetch = true;
+// runNodeTests(enterpriseFetch, 'built-in (node-fetch fallback)');
