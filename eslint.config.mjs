@@ -1,10 +1,13 @@
+import chaiFriendly from "eslint-plugin-chai-friendly";
+import cypress from "eslint-plugin-cypress/flat";
 import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 import js from '@eslint/js';
+import mocha from "eslint-plugin-mocha";
 import prettier from 'eslint-config-prettier';
 import ts from 'typescript-eslint';
 
-export default ts.config(
+export default ts.defineConfig(
   {
     ignores: [
       '/dist/',
@@ -24,8 +27,12 @@ export default ts.config(
     files: ['**/*.{ts,tsx,mts}'],
     ...config,
   })),
+  mocha.configs.flat.recommended,
+  cypress.configs.recommended,
+  chaiFriendly.configs.recommendedFlat,
   {
     plugins: {
+      cypress,
       '@typescript-eslint': ts.plugin,
     },
     languageOptions: { globals: globals.node },
