@@ -1,16 +1,12 @@
-import isClient from './client/is-client';
+import isNode from './server/is-node';
 
 export const resolveFetch = async () => {
   const node = isNode();
   if (!node) return window.fetch;
-  if (node === 'node') return globalThis.fetch;
 
-  const nodeFetch = await import('node-fetch');
-  return nodeFetch.default as unknown as typeof globalThis.fetch;
-};
-
-export const isNode = () => {
-  if (isClient()) return false;
-  if (typeof globalThis.fetch === 'function') return 'node';
-  return 'node-fetch';
+  if (node !== 'node') {
+    (globalThis as any).fallbackFetch = true;
+    (globalThis.fetch as any) = (await import('node-fetch')).default;
+  }
+  return globalThis.fetch;
 };
