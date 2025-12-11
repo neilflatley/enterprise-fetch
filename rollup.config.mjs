@@ -27,6 +27,7 @@ const moduleBuild = ({ dist, codecov }) => ({
     inlineDynamicImports: true,
     exports: 'named',
     sourcemap: !!codecov,
+    dynamicImportInCjs: false
   },
   external: Object.keys(pkg.dependencies),
   plugins: [
