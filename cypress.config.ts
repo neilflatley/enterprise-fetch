@@ -6,6 +6,14 @@ export default defineConfig({
   e2e: {
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/integration/**/*.spec.{js,mjs,ts}',
+    // Node-only specs import `node:http`, which the webpack preprocessor cannot
+    // compile — it fails preparing the file, before any test runs. They are run
+    // by mocha instead; see the `mocha:run` script.
+    excludeSpecPattern: [
+      '**/__snapshots__/**',
+      '**/*.snap',
+      '**/node-native-fetch.spec.mjs',
+    ],
     setupNodeEvents(on, config) {
       // Register code coverage
       codeCoverageTask(on, config);

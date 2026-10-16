@@ -14,14 +14,16 @@ import enterpriseFetch from '../../instrumented/dist/enterprise-fetch.esm.js';
  * The other Node specs replace global fetch with fetch-mock, which never
  * validates the signal, so none of them could see it. This one deliberately
  * uses the real global fetch against a real server.
+ *
+ * Node-only: it imports `node:http`, which the Cypress webpack preprocessor
+ * cannot compile. `cypress.config.ts` excludes it from the browser run; mocha
+ * picks it up through the `node*.spec.mjs` glob in `mocha:run`.
  */
 describe('Node native fetch compatibility', function () {
   let server;
   let origin;
 
   before(function (done) {
-    if (typeof globalThis.Cypress !== 'undefined') return this.skip();
-
     server = http.createServer((req, res) => {
       if (req.url === '/slow') {
         return setTimeout(() => res.writeHead(200).end('late'), 5000);
