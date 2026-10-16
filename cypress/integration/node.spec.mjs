@@ -12,7 +12,7 @@ const setGlobalTimeout = (timeout = 4000) =>
   Cypress.config('defaultCommandTimeout', timeout);
 
 const runNodeTests = (fetchFn, defaults) => {
-  describe.only('Node module tests [env: node] [defaults: ' + defaults + ']', () => {
+  describe('Node module tests [env: node] [defaults: ' + defaults + ']', () => {
     setGlobalTimeout(20 * 1000);
     let response, error;
 
