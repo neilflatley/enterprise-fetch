@@ -5,15 +5,16 @@
     "esModuleInterop": true,
     "target": "ESNext",
     "noImplicitAny": true,
-    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "declaration": true,
     // Ensure that .d.ts files are created by tsc, but not .js files
     "emitDeclarationOnly": true,
     // Ensure that Babel can safely transpile files in the TypeScript project
     "isolatedModules": true,
+    "rootDir": "src",
     "outDir": "dist",
-    "baseUrl": ".",
     "paths": {
       // "*": ["node_modules/*"]
     },

@@ -11,9 +11,15 @@ const fetchDefaults = {
   },
   // Do retry function to examine failures and apply custom retry logic
   // return true to retry the fetch call
-  doRetry: async (attempt, res, { url, options }) => {
+  doRetry: async (
+    attempt,
+    res,
+    { url, options } = { url: '', options: {} }
+  ) => {
     // Get the retry policy from options or fetchDefaults
-    const { retry = fetchDefaults.retry } = options;
+    const retry =
+      options?.retry || (fetchDefaults as Required<FetchInit>).retry;
+
     if (attempt <= retry.retries) {
       const counter = `${attempt}/${retry.retries}`;
 

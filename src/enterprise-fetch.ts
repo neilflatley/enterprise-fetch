@@ -46,7 +46,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
       }, timeoutMs);
 
       // Try fetching, wait for error or response
-      const [error, response]: [AppError, Response] = await to(
+      const [error, response] = (await to(
         thisFetch(url, {
           // Standard fetch options
           ...options,
@@ -55,7 +55,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
           // The signal will recieve abort() after timeout elapsed
           signal: controller.signal,
         })
-      );
+      )) as [AppError, undefined] | [null, Response];
       if (error) {
         clearTimeout(timeoutId);
         if (
