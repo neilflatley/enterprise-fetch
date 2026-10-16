@@ -1,4 +1,4 @@
-import AbortController from 'abort-controller';
+import AbortControllerShim from 'abort-controller';
 import { to } from 'await-to-js';
 import promiseRetry from 'promise-retry';
 
@@ -9,6 +9,18 @@ import { isFunc } from './util/typeguards';
 
 import { AppError, FetchInit, Fetch } from './models';
 export * from './models';
+
+/**
+ * `abort-controller` resolves to the native `AbortController` in the browser
+ * build, but to its own shim on Node — and Node's global `fetch` rejects a
+ * foreign signal: `RequestInit: Expected signal to be an instance of
+ * AbortSignal`. Prefer the platform's controller whenever there is one, and
+ * keep the shim for environments without it.
+ */
+const AbortController: typeof globalThis.AbortController =
+  typeof globalThis.AbortController !== 'undefined'
+    ? globalThis.AbortController
+    : (AbortControllerShim as unknown as typeof globalThis.AbortController);
 
 export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
   // Fetch function using hoisted defaults wrapped in a promise
@@ -28,8 +40,7 @@ export const fetchWithDefaults = (fetchDefaults: FetchInit = FetchDefaults) => {
 
       // Abort signal pattern
       // Since v15.4.0 Node.js comes with AbortController out of the box
-      const controller =
-        new AbortController() as unknown as globalThis.AbortController;
+      const controller = new AbortController();
       const timeoutId = setTimeout(() => {
         controller.abort();
       }, timeoutMs);
